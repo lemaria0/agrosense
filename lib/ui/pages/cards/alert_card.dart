@@ -21,16 +21,15 @@ class AlertCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min, // importante
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(type),
           const SizedBox(height: 8),
           Text(
             message,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          Text(time),
+          Text(time, style: TextStyle(fontWeight: FontWeight.w600)),
         ],
       ),
     );

@@ -35,7 +35,7 @@ class BrokerService {
       )
         ..port = BrokerConfig.port // porta segura (TLS)
         ..secure = true            // ativa conexão segura
-        ..keepAlivePeriod = 1      // intervalo de keep-alive
+        ..keepAlivePeriod = 5      // intervalo de keep-alive
         ..logging(on: true)        // log para debug
         ..onDisconnected = () {}
         ..setProtocolV311();       // versão do protocolo MQTT
@@ -92,6 +92,10 @@ class BrokerService {
     if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) {
       return Result.error(Exception("Cliente não conectado"));
     }
+
+    _client!.subscribe(topic, MqttQos.atLeastOnce); // função para inscrição
+
+    print("📡 Subscribed no tópico: $topic"); // debug
 
     // registra o callback para o tópico informado
     _messagesCallbacks.add(topic, onMessage);
@@ -188,7 +192,7 @@ class BrokerService {
   // única forma que eu consegui pra notificar caso haja desconexão
   // checa a conexão de 1 em 1 segundo
   void startConnectionChecker() {
-    _connectionChecker = Timer.periodic(const Duration(seconds: 1), (_) {
+    _connectionChecker = Timer.periodic(const Duration(seconds: 5), (_) {
       final connected = _client?.connectionStatus?.state == MqttConnectionState.connected; // usa o próprio estado do cliente para verificar
       _connectionCallbacks.notify(connected); // notifica o repository
     });

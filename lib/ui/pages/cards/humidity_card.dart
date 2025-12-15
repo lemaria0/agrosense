@@ -22,14 +22,14 @@ class HumidityCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Porcentagem (%)"),
+          const Text("Porcentagem (%)", style: TextStyle(fontWeight: FontWeight.w600)),
           const Spacer(),
           Text(
             value.toStringAsFixed(1),
             style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
-          Text(time),
+          Text(time, style: TextStyle(fontWeight: FontWeight.w600)),
         ],
       ),
     );

@@ -171,21 +171,19 @@ class BrokerRepository extends IBrokerRepository {
     }
   }
 
-  // atualiza ou adiciona um alerta na lista de alertas atuais
   void _updateAlert(AlertModel alert) {
-    // procura um alerta com o mesmo tipo na lista
-    final index = _currentAlerts.indexWhere(
-      (s) => s.type == alert.type,
-    );
+    // filtra alertas do mesmo tipo
+    final sameTypeAlerts = _currentAlerts.where((a) => a.type == alert.type).toList();
 
-    // se o alerta já existir, substitui pelo novo valor
-    if (index >= 0) {
-      _currentAlerts[index] = alert;
-    } 
-    // caso contrário, adiciona o alerta à lista
-    else {
-      _currentAlerts.add(alert);
+    // se já existem 5 alertas desse tipo, remove o mais antigo
+    if (sameTypeAlerts.length >= 5) {
+      // considera que o mais antigo é o primeiro inserido
+      final oldestAlert = sameTypeAlerts.first;
+      _currentAlerts.remove(oldestAlert);
     }
+
+    // adiciona o novo alerta
+    _currentAlerts.add(alert);
   }
 
   // atualiza o estado de conexão

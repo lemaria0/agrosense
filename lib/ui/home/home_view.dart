@@ -68,6 +68,7 @@ class _HomeViewState extends State<HomeView> {
           final connectResult = await currentViewModel.connect(); // tenta reconectar
           switch(connectResult) {
             case Ok():
+            _init();
               showOkMessage(context, "Conexão reestabelecida"); // mostra a "Conexão reestabelecida"
             case Error():
               Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false); // move para login

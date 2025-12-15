@@ -5,15 +5,15 @@ import 'package:sd/data/models/alert_extentions.dart';
 import 'package:sd/ui/pages/cards/alert_card.dart';
 
 class AlertsPage extends StatelessWidget {
-  const AlertsPage({
-    super.key,
-    required this.alerts,
-  });
+  const AlertsPage({super.key, required this.alerts});
 
   final List<AlertModel> alerts;
 
   @override
   Widget build(BuildContext context) {
+    String icon = "";
+    Color color = Color(0xFF4E82F0);
+    double size = 15;
     // agrupa os alertas por categoria
     final Map<String, List<AlertModel>> alertsByType = {};
     for (var alert in alerts) {
@@ -50,15 +50,27 @@ class AlertsPage extends StatelessWidget {
             String name = '';
             if (category == "ph") {
               name = "Acidez";
+              icon = "assets/drop-icon.svg";
+              color = Color(0xFF4EC835);
+              size = 30;
             }
             if (category == 'luminosity') {
-              name = "Luminosidade";
+              name = " Luminosidade";
+              icon = "assets/sun-icon.svg";
+              color = Color(0xFF4E82F0);
+              size = 25;
             }
             if (category == "humidity") {
-              name = "Umidade";
+              name = " Umidade";
+              icon = "assets/cloud-icon.svg";
+              color = Color(0xFF4E82F0);
+              size = 15;
             }
             if (category == "temperature") {
-              name = "Temperatura";
+              name = " Temperatura";
+              icon = "assets/thermometer-icon.svg";
+              color = Color(0xFF4EC835);
+              size = 25;
             }
             final reversed = entry.value.reversed.toList();
 
@@ -67,12 +79,25 @@ class AlertsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        icon,
+                        height: size,
+                        colorFilter: ColorFilter.mode(
+                          color,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      SizedBox(width: 3),
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
                   Wrap(
