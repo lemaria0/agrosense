@@ -193,8 +193,8 @@ class MqttViewModel extends ChangeNotifier implements IHomeViewModel {
       // adiciona o novo valor
       list.add(s);
 
-      // mantém apenas os últimos 5 registros
-      if (list.length > 5) {
+      // mantém apenas os últimos 7 registros (é o valor adequado pra tela)
+      if (list.length > 7) {
         list.removeAt(0);
       }
     }

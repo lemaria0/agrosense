@@ -20,6 +20,8 @@ class AlertsPage extends StatelessWidget {
       alertsByType.putIfAbsent(alert.type.name, () => []).add(alert);
     }
 
+    final Map<String, ValueNotifier<int>> visibleCountByType = {};
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -47,6 +49,10 @@ class AlertsPage extends StatelessWidget {
 
           ...alertsByType.entries.map((entry) {
             final category = entry.key;
+            visibleCountByType.putIfAbsent(
+              category,
+              () => ValueNotifier<int>(5),
+            );
             String name = '';
             if (category == "ph") {
               name = "Acidez";
@@ -84,10 +90,7 @@ class AlertsPage extends StatelessWidget {
                       SvgPicture.asset(
                         icon,
                         height: size,
-                        colorFilter: ColorFilter.mode(
-                          color,
-                          BlendMode.srcIn,
-                        ),
+                        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                       ),
                       SizedBox(width: 3),
                       Text(
@@ -100,16 +103,51 @@ class AlertsPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 20,
-                    runSpacing: 20,
-                    children: reversed.map((alert) {
-                      return AlertCard(
-                        type: alert.type.name,
-                        message: alert.msg,
-                        time: alert.formattedTime,
+                  ValueListenableBuilder<int>(
+                    valueListenable: visibleCountByType[category]!,
+                    builder: (context, visibleCount, _) {
+                      final visibleAlerts = reversed
+                          .take(visibleCount)
+                          .toList();
+                      final hasMore = reversed.length > visibleAlerts.length;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Wrap(
+                            spacing: 20,
+                            runSpacing: 20,
+                            children: visibleAlerts.map((alert) {
+                              return AlertCard(
+                                type: alert.type.name,
+                                message: alert.msg,
+                                time: alert.formattedTime,
+                              );
+                            }).toList(),
+                          ),
+
+                          if (hasMore) ...[
+                            const SizedBox(height: 12),
+                            Center(
+                              child: SizedBox(
+                                width: 100,
+                                child: TextButton(
+                                  onPressed: () {
+                                    visibleCountByType[category]!.value += 5;
+                                  },
+                                  child: Center(
+                                    child: const Text(
+                                      "MOSTRAR MAIS",
+                                      style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF4E82F0), fontSize: 10),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
                       );
-                    }).toList(),
+                    },
                   ),
                 ],
               ),

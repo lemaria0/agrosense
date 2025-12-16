@@ -40,7 +40,7 @@ class ModeButton extends StatelessWidget {
             Icon(
               mode == CommunicationMode.mqtt
                   ? Icons.wifi_tethering
-                  : Icons.http,
+                  : Icons.wifi,
               color: Colors.white,
               size: 20,
             ),

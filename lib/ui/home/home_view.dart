@@ -85,8 +85,8 @@ class _HomeViewState extends State<HomeView> {
   _manualDisconnect = true;
 
   // remove listener e desconecta VM antiga
-  currentViewModel.removeListener(_onViewModelChanged);
   await currentViewModel.disconnect();
+  currentViewModel.removeListener(_onViewModelChanged);
 
   // troca de VM
   currentViewModel = newViewModel;
@@ -168,7 +168,7 @@ class _HomeViewState extends State<HomeView> {
               final disconnectResult = await currentViewModel.disconnect(); // desconecta
               switch (disconnectResult) {
                 case Ok():
-                  if (mounted) showOkMessage(context, "Desnconectado com sucesso"); // mensagem de sucesso
+                  if (mounted) showOkMessage(context, "Desconectado com sucesso"); // mensagem de sucesso
                   Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false); // redireciona para login
                 case Error():
                   if (mounted) showErrorMessage(context, disconnectResult.errorMessage); // mensagem de erro

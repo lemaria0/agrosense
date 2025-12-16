@@ -25,7 +25,7 @@ class AcidityCard extends StatelessWidget {
           const Text("Escala PH", style: TextStyle(fontWeight: FontWeight.w600)),
           const Spacer(),
           Text(
-            value.toStringAsFixed(1),
+            value.toStringAsFixed(2),
             style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
           ),
           const Spacer(),

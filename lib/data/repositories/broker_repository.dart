@@ -175,8 +175,8 @@ class BrokerRepository extends IBrokerRepository {
     // filtra alertas do mesmo tipo
     final sameTypeAlerts = _currentAlerts.where((a) => a.type == alert.type).toList();
 
-    // se já existem 5 alertas desse tipo, remove o mais antigo
-    if (sameTypeAlerts.length >= 5) {
+    // se já existem 100 alertas desse tipo, remove o mais antigo (adicionei a lógica do MOSTRAR MAIS então não tem problema ter tantos registros assim)
+    if (sameTypeAlerts.length >= 100) {
       // considera que o mais antigo é o primeiro inserido
       final oldestAlert = sameTypeAlerts.first;
       _currentAlerts.remove(oldestAlert);
