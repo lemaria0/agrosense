@@ -16,9 +16,13 @@ class SensorModel {
 
   factory SensorModel.fromMap(Map<String, dynamic> map) {
     return SensorModel(
-      id: map['id'] ?? '',
+      id: map['id']?.toString() ?? '',
       type: DataType.fromString(map['type'] ?? ''),
-      avg: (map['avg'] ?? 0).toDouble(),
+
+      // Tenta ler 'avg' (Broker). Se for nulo, tenta 'value' (Java).
+      // Se ambos forem nulos, usa 0.0.
+      avg: (map['avg'] ?? map['value'] ?? 0.0).toDouble(),
+
       timestamp: map['timestamp'] ?? 0,
     );
   }

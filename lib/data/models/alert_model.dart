@@ -12,11 +12,7 @@ class AlertModel {
     required this.timestamp,
   });
 
-  AlertModel copyWith({
-    DataType? type,
-    String? msg,
-    int? timestamp,
-  }) {
+  AlertModel copyWith({DataType? type, String? msg, int? timestamp}) {
     return AlertModel(
       type: type ?? this.type,
       msg: msg ?? this.msg,
@@ -27,16 +23,12 @@ class AlertModel {
   factory AlertModel.fromMap(Map<String, dynamic> map) {
     return AlertModel(
       type: DataType.fromString(map['type'] ?? ''),
-      msg: map['msg'] ?? '',
+      msg: map['message'] ?? map['msg'] ?? '',
       timestamp: map['timestamp'] ?? 0,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'type': type,
-      'timestamp': timestamp,
-      'msg': msg,
-    };
+    return {'type': type, 'timestamp': timestamp, 'msg': msg};
   }
 }

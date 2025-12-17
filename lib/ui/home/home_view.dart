@@ -16,11 +16,11 @@ class HomeView extends StatefulWidget {
   const HomeView({
     super.key,
     required this.mqttViewModel,
-    // required this.rmiViewModel,
+    required this.rmiViewModel,
   });
 
   final IHomeViewModel mqttViewModel;
-  // final IHomeViewModel rmiViewModel;
+  final IHomeViewModel rmiViewModel;
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -30,17 +30,22 @@ class _HomeViewState extends State<HomeView> {
   late IHomeViewModel currentViewModel;
   bool _wasConnected = false; // controla estado anterior de conexão
 
-  CommunicationMode mode = CommunicationMode.mqtt; // controla de onde estão vindo os dados atualmente
+  CommunicationMode mode = CommunicationMode
+      .mqtt; // controla de onde estão vindo os dados atualmente
   int selectedIndex = 0; //página atual
-  bool _manualDisconnect = false; // flag diferente pra quando eu troco de view model
+  bool _manualDisconnect =
+      false; // flag diferente pra quando eu troco de view model
 
   @override
   void initState() {
     super.initState();
 
-    currentViewModel = widget.mqttViewModel; // inicialmente os dados vem do mqtt
+    currentViewModel =
+        widget.mqttViewModel; // inicialmente os dados vem do mqtt
     _wasConnected = currentViewModel.isConnected;
-    currentViewModel.addListener(_onViewModelChanged); // adiciona listener para caso haja desconexão
+    currentViewModel.addListener(
+      _onViewModelChanged,
+    ); // adiciona listener para caso haja desconexão
 
     _init();
   }
@@ -60,18 +65,31 @@ class _HomeViewState extends State<HomeView> {
     // quando a view model muda o estado, ele vai ver se a conexão foi perdida
     final isConnectedNow = currentViewModel.isConnected;
 
-    if (_wasConnected && !isConnectedNow) { // se estava conectado e perdeu a conexão
-      if (!_manualDisconnect) { // se não é quando troca de view model
+    if (_wasConnected && !isConnectedNow) {
+      // se estava conectado e perdeu a conexão
+      if (!_manualDisconnect) {
+        // se não é quando troca de view model
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!mounted) return;
-          showErrorMessage(context, "Conexão perdida"); // mostra a mensagem de erro "Conexão perdida"
-          final connectResult = await currentViewModel.connect(); // tenta reconectar
-          switch(connectResult) {
+          showErrorMessage(
+            context,
+            "Conexão perdida",
+          ); // mostra a mensagem de erro "Conexão perdida"
+          final connectResult = await currentViewModel
+              .connect(); // tenta reconectar
+          switch (connectResult) {
             case Ok():
-            _init();
-              showOkMessage(context, "Conexão reestabelecida"); // mostra a "Conexão reestabelecida"
+              _init();
+              showOkMessage(
+                context,
+                "Conexão reestabelecida",
+              ); // mostra a "Conexão reestabelecida"
             case Error():
-              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false); // move para login
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/login',
+                (route) => false,
+              ); // move para login
           }
         });
       }
@@ -82,25 +100,25 @@ class _HomeViewState extends State<HomeView> {
 
   // troca de view model de acordo com a fonte de dados selecionada
   void _switchViewModel(IHomeViewModel newViewModel) async {
-  _manualDisconnect = true;
+    _manualDisconnect = true;
 
-  // remove listener e desconecta VM antiga
-  await currentViewModel.disconnect();
-  currentViewModel.removeListener(_onViewModelChanged);
+    // remove listener e desconecta VM antiga
+    await currentViewModel.disconnect();
+    currentViewModel.removeListener(_onViewModelChanged);
 
-  // troca de VM
-  currentViewModel = newViewModel;
-  _wasConnected = currentViewModel.isConnected;
-  currentViewModel.addListener(_onViewModelChanged);
+    // troca de VM
+    currentViewModel = newViewModel;
+    _wasConnected = currentViewModel.isConnected;
+    currentViewModel.addListener(_onViewModelChanged);
 
-  showOkMessage(context, "Fonte de dados atualizada");
+    showOkMessage(context, "Fonte de dados atualizada");
 
-  // conecta nova VM
-  await currentViewModel.connect();
-  _init();
+    // conecta nova VM
+    await currentViewModel.connect();
+    _init();
 
-  _manualDisconnect = false;
-}
+    _manualDisconnect = false;
+  }
 
   Widget buildCurrentPage() {
     switch (selectedIndex) {
@@ -128,7 +146,9 @@ class _HomeViewState extends State<HomeView> {
           backgroundColor: const Color(0xFFF4F5F9),
           body: currentViewModel.isLoading
               ? const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF4E82F0)), // carregamento
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF4E82F0),
+                  ), // carregamento
                 )
               : Row(
                   children: [
@@ -165,13 +185,26 @@ class _HomeViewState extends State<HomeView> {
             backgroundColor: const Color(0xFFE74C3C),
             onPressed: () async {
               _manualDisconnect = true;
-              final disconnectResult = await currentViewModel.disconnect(); // desconecta
+              final disconnectResult = await currentViewModel
+                  .disconnect(); // desconecta
               switch (disconnectResult) {
                 case Ok():
-                  if (mounted) showOkMessage(context, "Desconectado com sucesso"); // mensagem de sucesso
-                  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false); // redireciona para login
+                  if (mounted)
+                    showOkMessage(
+                      context,
+                      "Desconectado com sucesso",
+                    ); // mensagem de sucesso
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/login',
+                    (route) => false,
+                  ); // redireciona para login
                 case Error():
-                  if (mounted) showErrorMessage(context, disconnectResult.errorMessage); // mensagem de erro
+                  if (mounted)
+                    showErrorMessage(
+                      context,
+                      disconnectResult.errorMessage,
+                    ); // mensagem de erro
               }
             },
             child: const Icon(Icons.logout, color: Colors.white),
@@ -225,8 +258,8 @@ class _HomeViewState extends State<HomeView> {
               _switchViewModel(
                 value == CommunicationMode.mqtt
                     ? widget.mqttViewModel
-                    // : widget.rmiViewModel
-                    : widget.mqttViewModel, // ao criar a outra view model, apagar essa linha e descomentar a de cima
+                    : widget.rmiViewModel,
+                // ao criar a outra view model, apagar essa linha e descomentar a de cima
               );
             },
           ),

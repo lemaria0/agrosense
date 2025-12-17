@@ -6,9 +6,11 @@ import 'package:sd/config/routes.dart';
 
 // Services
 import 'package:sd/data/services/broker_service.dart';
+import 'package:sd/data/services/rmi_service.dart';
 
 // Repositories
 import 'package:sd/data/repositories/broker_repository.dart';
+import 'package:sd/data/repositories/rmi_repository.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,19 +20,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(create: (context) => BrokerService()),
-        // Provider(create: (context) => RmiService()),
+        Provider(create: (context) => RmiService()),
         ChangeNotifierProvider(
-          create: (context) => BrokerRepository(
-            brokerService: context.read(),
-          ),
+          create: (context) => BrokerRepository(brokerService: context.read()),
         ),
-        /*
         ChangeNotifierProvider(
-          create: (context) => RmiRepository(
-            rmiService: context.read(),
-          ),
+          create: (context) => RmiRepository(rmiService: context.read()),
         ),
-        */
       ],
       child: Builder(
         builder: (context) {

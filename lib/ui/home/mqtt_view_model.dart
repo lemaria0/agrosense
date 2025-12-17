@@ -8,8 +8,10 @@ import 'package:sd/utils/results.dart';
 
 class MqttViewModel extends ChangeNotifier implements IHomeViewModel {
   MqttViewModel({required IBrokerRepository brokerRepository})
-      : _brokerRepository = brokerRepository {
-    _brokerRepository.addListener(_onRepositoryUpdate); // escuta alterações no repository (sensores, alertas, conexão)
+    : _brokerRepository = brokerRepository {
+    _brokerRepository.addListener(
+      _onRepositoryUpdate,
+    ); // escuta alterações no repository (sensores, alertas, conexão)
   }
 
   // repository responsável pela comunicação MQTT
@@ -72,7 +74,8 @@ class MqttViewModel extends ChangeNotifier implements IHomeViewModel {
       _isLoading = true; // carregamento
 
       // inscrição nos tópicos de sensores
-      final informationsResult = await _brokerRepository.subscribeToInformations();
+      final informationsResult = await _brokerRepository
+          .subscribeToInformations();
 
       switch (informationsResult) {
         case Ok(value: final informations):
@@ -101,12 +104,13 @@ class MqttViewModel extends ChangeNotifier implements IHomeViewModel {
   }
 
   @override
-  Future<Result<void>> connect() async { 
+  Future<Result<void>> connect() async {
     try {
       _isLoading = true;
 
-      final connectResult = await _brokerRepository.connect(); // para quando a conexão é reestabelecida
-      switch(connectResult){
+      final connectResult = await _brokerRepository
+          .connect(); // para quando a conexão é reestabelecida
+      switch (connectResult) {
         case Ok():
           return const Result.ok(null);
         case Error(error: final e):
@@ -132,7 +136,6 @@ class MqttViewModel extends ChangeNotifier implements IHomeViewModel {
         case Error(error: final e):
           return Result.error(e);
       }
-
     } finally {
       _isLoading = false;
       notifyListeners();
